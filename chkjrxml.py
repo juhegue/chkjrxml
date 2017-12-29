@@ -1,21 +1,38 @@
 # -*- encoding: utf-8 -*-
+"""
+    Elimina fields repetidos de un jrxml
 
+    @juhegue (vie dic 29 18:44:04 CET 2017)
+
+    El argumento a pasar puede ser un fichero o un directorio
+    (se crea una copiar en .report)
+
+"""
 from datetime import datetime
-import os
 from lxml import etree
+import os
+import sys
+
+__version__ = "0.0.1"
 
 
-class CheckReport:
-    def __init__(self, fileName, pathPrefix=''):
+class CheckReport(object):
+    def __init__(self, fileName, dirBackup):
         self._reportPath = fileName
-        self._pathPrefix = pathPrefix.strip()
-        if self._pathPrefix and self._pathPrefix[-1] != '/':
-            self._pathPrefix += '/'
+        self._pathPrefix = ""
 
-        self._language = 'xpath'
+        try:
+            with open(fileName, "r") as f:
+                self._data = f.read()
 
-        with open(fileName, "r") as f:
-            self._data = f.read()
+            sufijo = datetime.now().strftime("%Y%m%d%H%M%S")
+            nuevo = os.path.join(dirBackup, "%s_%s" % (self.name, sufijo))
+            with open(nuevo, "w") as f:
+                f.write(self._data)
+
+        except Exception as e:
+            print u"Error %s: %s" % (fileName, e)
+            sys.exit(1)
 
     def __str__(self):
         return self._reportPath
@@ -28,9 +45,12 @@ class CheckReport:
     def name(self):
         return os.path.basename(self._reportPath)
 
-    def save(self, nombre):
-        with open(nombre, "w") as f:
-            f.write(self._data)
+    def save(self, fileName):
+        try:
+            with open(fileName, "w") as f:
+                f.write(self._data)
+        except Exception as e:
+            print u"Error %s: %s" % (fileName, e)
 
     def extractFields(self):
         doc = etree.parse(self._reportPath)
@@ -105,28 +125,33 @@ class Jasper(object):
             for fic in os.listdir(file_path):
                 if fic.lower().endswith('.jrxml'):
                     nom = os.path.join(file_path, fic)
-                    jrs.append(CheckReport(nom))
+                    jrs.append(CheckReport(nom, self.dir_reports()))
         else:
-            jrs.append(CheckReport(file_path))
+            jrs.append(CheckReport(file_path, self.dir_reports()))
 
-        dir_reports = self.dir_reports()
-        sufijo = datetime.now().strftime("%Y%m%d%H%M%S")
         for jr in jrs:
             print jr.name
             jr.extractFields()
-            nuevo = os.path.join(dir_reports, "%s_%s" % (jr.name, sufijo))
-            jr.save(nuevo)
+            jr.save(jr.path)
 
     def dir_reports(self):
         f = os.path.realpath(__file__)
         p = os.path.dirname(f)
-        return os.path.join(p, 'report')
+        directorio = os.path.join(p, '.report')
+        try:
+            os.stat(directorio)
+        except:
+            os.mkdir(directorio)
+        return directorio
 
 
 def main():
-    Jasper("/tmp/XX")
+    if not sys.argv[1:]:
+        print __doc__
+        sys.exit(2)
+
+    Jasper(sys.argv[1])
 
 
 if __name__ == "__main__":
-    #kk()
     main()
