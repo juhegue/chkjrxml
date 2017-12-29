@@ -1,10 +1,8 @@
 # -*- encoding: utf-8 -*-
 
+from datetime import datetime
 import os
 from lxml import etree
-import re
-
-dataSourceExpressionRegExp = re.compile( r"""\$P\{(\w+)\}""" )
 
 
 class CheckReport:
@@ -89,34 +87,35 @@ class CheckReport:
             print "ERROR no encontrado"
             return
 
+        # borra el field
         fin += len(busca)
         self._data = self._data[:ini] + self._data[fin:]
 
+        # y lo reemplaza
         self._data = self._data.replace('$F{%s}' % nombre, '$F{%s}' % nombre_ok)
         print "Ok"
 
 
-
-
-
-
 class Jasper(object):
 
-    def __init__(self):
-        dir_reports = self.dir_reports()
-
-        # solo los .jrxml
+    def __init__(self, file_path):
         jrs = list()
-        for fic in os.listdir(dir_reports):
-            if fic.lower().endswith('.jrxml'):
-                nom = os.path.join(dir_reports, fic)
-                jrs.append(CheckReport(nom))
+        if os.path.isdir(file_path):
+            # solo los .jrxml
+            for fic in os.listdir(file_path):
+                if fic.lower().endswith('.jrxml'):
+                    nom = os.path.join(file_path, fic)
+                    jrs.append(CheckReport(nom))
+        else:
+            jrs.append(CheckReport(file_path))
 
+        dir_reports = self.dir_reports()
+        sufijo = datetime.now().strftime("%Y%m%d%H%M%S")
         for jr in jrs:
             print jr.name
             jr.extractFields()
-            jr.save("/tmp/p.jrxml")
-
+            nuevo = os.path.join(dir_reports, "%s_%s" % (jr.name, sufijo))
+            jr.save(nuevo)
 
     def dir_reports(self):
         f = os.path.realpath(__file__)
@@ -125,7 +124,7 @@ class Jasper(object):
 
 
 def main():
-    Jasper()
+    Jasper("/tmp/XX")
 
 
 if __name__ == "__main__":
