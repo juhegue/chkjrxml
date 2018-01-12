@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 """
-    Elimina fields repetidos de un jrxml
-
     @juhegue (vie dic 29 18:44:04 CET 2017)
+
+    Chequeo jrxml
 
     El argumento a pasar puede ser un fichero o un directorio
     (se crea una copiar en .report)
@@ -24,6 +24,7 @@ class CheckReport(object):
         self.fields = list()
         self.fieldNames = list()
         self.variableNames = list()
+        self.SortFieldsNames = list()
 
         try:
             with open(fileName, 'r') as f:
@@ -49,6 +50,13 @@ class CheckReport(object):
     def name(self):
         return os.path.basename(self._reportPath)
 
+    def save(self, fileName):
+        try:
+            with open(fileName, 'w') as f:
+                f.write(self._data)
+        except Exception as e:
+            print u'Error %s: %s' % (fileName, e)
+
     def es_variable_report(self, nom):
         """
         Comprueba si es una variable del report como "PAGE_NUMBER"
@@ -58,13 +66,6 @@ class CheckReport(object):
             if var[0] == var[0].upper() and var[1] == var[1].upper():
                 return True
         return False
-
-    def save(self, fileName):
-        try:
-            with open(fileName, 'w') as f:
-                f.write(self._data)
-        except Exception as e:
-            print u'Error %s: %s' % (fileName, e)
 
     def extractFields(self):
         doc = etree.parse(self._reportPath)
@@ -93,7 +94,6 @@ class CheckReport(object):
                 newPath.append( x.split('-')[-1] )
             path = '/'.join( newPath )
             if path in fields:
-                # print "WARNING: path '%s' already exists in report. This is not supported by the module. Offending fields: %s, %s" % (path, fields[path]['name'], name)
                 self.field_duplicados(name, fields[path]['name'])
                 continue
             fields[ path ] = {
@@ -116,27 +116,25 @@ class CheckReport(object):
             name = tag.get('name')
             self.variableNames.append(name)
 
+    def extractSortFields(self):
+        doc = etree.parse(self._reportPath)
+
+        # Define namespaces
+        ns = 'http://jasperreports.sourceforge.net/jasperreports'
+        nss = {'jr': ns}
+
+        fieldTags = doc.xpath( '/jr:jasperReport/jr:sortField', namespaces=nss )
+        for tag in fieldTags:
+            name = tag.get('name')
+            self.SortFieldsNames.append(name)
+
     def borra_field(self, nombre):
         busca = '<field name="%s"' % nombre
         ini = self._data.find(busca)
 
         busca = '</field>'
         fin = self._data.find(busca, ini)
-        if ini <= 0 or fin <0:
-            return False
-
-        # borra
-        fin += len(busca)
-        self._data = self._data[:ini] + self._data[fin:]
-        return True
-
-    def borra_variable(self, nombre):
-        busca = '<variable name="%s"' % nombre
-        ini = self._data.find(busca)
-
-        busca = '</variable>'
-        fin = self._data.find(busca, ini)
-        if ini <= 0 or fin <0:
+        if ini <= 0 or fin < 0:
             return False
 
         # borra
@@ -146,10 +144,6 @@ class CheckReport(object):
 
     def field_duplicados(self, nombre, nombre_ok):
         print '\tPurgando campo duplicado %s por %s:' % (nombre, nombre_ok),
-        #	<field name="Nombre_impuesto-name" class="java.lang.String">
-        #		<fieldDescription><![CDATA[/data/record/Lineas_de_factura-invoice_line/Impuestos-invoice_line_tax_id/Nombre_impuesto-name]]></fieldDescription>
-        #	</field>
-
         if self.borra_field(nombre):
             # y lo reemplaza
             self._data = self._data.replace('$F{%s}' % nombre, '$F{%s}' % nombre_ok)
@@ -173,10 +167,14 @@ class CheckReport(object):
                 print "\tCampo no definido:%s" % nom
 
     def field_sin_uso(self):
+        prime = False
         for nombre in self.fieldNames:
             busca = '$F{%s}' % nombre
-            if self._data.find(busca) < 0:
-                sn = raw_input('\tCampo sin uso %s ¿eliminar? S/N:' % nombre)
+            if nombre not in self.SortFieldsNames and self._data.find(busca) < 0:
+                if not prime:
+                    print "\tCampos sin uso"
+                    prime = True
+                sn = raw_input('\t  %s ¿eliminar? S/N:' % nombre)
                 if sn.lower() == 's':
                     self.borra_field(nombre)
 
@@ -196,15 +194,17 @@ class CheckReport(object):
                 print "\tVariable no definida:%s" % nom
 
     def variable_sin_uso(self):
+        prime = False
         for nombre in self.variableNames:
             busca = '$V{%s}' % nombre
             if self._data.find(busca) < 0:
-                sn = raw_input('\tVariable sin uso %s ¿eliminar? S/N:' % nombre)
-                if sn.lower() == 's':
-                    self.borra_variable(nombre)
+                if not prime:
+                    prime = True
+                    print '\tVariables sin uso:'
+                print '\t  %s' % nombre
+
 
 class Jasper(object):
-
     def __init__(self, file_path):
         jrs = list()
         if os.path.isdir(file_path):
@@ -220,10 +220,11 @@ class Jasper(object):
             print jr.name
             jr.extractFields()
             jr.extractVariables()
-            jr.field_sin_definir()
-            jr.field_sin_uso()
+            jr.extractSortFields()
             jr.variable_sin_definir()
             jr.variable_sin_uso()
+            jr.field_sin_definir()
+            jr.field_sin_uso()
             jr.save(jr.path)
 
     def dir_reports(self):
@@ -251,3 +252,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+#no borrar campos que esten el sort
