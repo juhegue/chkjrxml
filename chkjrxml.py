@@ -164,7 +164,7 @@ class CheckReport(object):
 
         for nom in fields.values():
             if nom not in self.fieldNames:
-                print "\tCampo no definido:%s" % nom
+                print "\tERROR. Campo no definido:%s" % nom
 
     def field_sin_uso(self):
         prime = False
@@ -191,7 +191,7 @@ class CheckReport(object):
 
         for nom in variables.values():
             if nom not in self.variableNames and not self.es_variable_report(nom):
-                print "\tVariable no definida:%s" % nom
+                print "\tERROR. Variable no definida:%s" % nom
 
     def variable_sin_uso(self):
         prime = False
