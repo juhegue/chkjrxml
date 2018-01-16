@@ -25,13 +25,14 @@ class CheckReport(object):
         self.fieldNames = list()
         self.variableNames = list()
         self.SortFieldsNames = list()
+        self.countNames = list()
 
         try:
             with open(fileName, 'r') as f:
                 self._data = f.read()
 
-            sufijo = datetime.now().strftime('%Y%m%d%H%M%S')
-            nuevo = os.path.join(dirBackup, '%s_%s' % (self.name, sufijo))
+            prefijo = datetime.now().strftime('%Y%m%d%H%M%S')
+            nuevo = os.path.join(dirBackup, '%s_%s' % (prefijo, self.name))
             with open(nuevo, 'w') as f:
                 f.write(self._data)
 
@@ -171,12 +172,15 @@ class CheckReport(object):
         for nombre in self.fieldNames:
             busca = '$F{%s}' % nombre
             if nombre not in self.SortFieldsNames and self._data.find(busca) < 0:
-                if not prime:
-                    print "\tCampos sin uso"
-                    prime = True
-                sn = raw_input('\t  %s ¿eliminar? S/N:' % nombre)
-                if sn.lower() == 's':
-                    self.borra_field(nombre)
+                tmp = nombre.split('-')
+                tmp = tmp[1] if len(tmp) == 2 else tmp[0]
+                if tmp not in self.countNames:
+                    if not prime:
+                        print "\tCampos sin uso"
+                        prime = True
+                    sn = raw_input('\t  %s ¿eliminar? S/N:' % nombre)
+                    if sn.lower() == 's':
+                        self.borra_field(nombre)
 
     def variable_sin_definir(self):
         variables = dict()
@@ -191,7 +195,13 @@ class CheckReport(object):
 
         for nom in variables.values():
             if nom not in self.variableNames and not self.es_variable_report(nom):
-                print "\tERROR. Variable no definida:%s" % nom
+                if nom.endswith('_COUNT'):
+                    if nom[:-6] not in self.fieldNames:
+                        print "\tERROR. Variable no definida:%s" % nom
+                    else:
+                        self.countNames.append(nom[:-6])
+                else:
+                    print "\tERROR. Variable no definida:%s" % nom
 
     def variable_sin_uso(self):
         prime = False
@@ -253,5 +263,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-#no borrar campos que esten el sort

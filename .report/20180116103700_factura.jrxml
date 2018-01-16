@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FacturaVenta1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="OPENERP_RELATIONS" value="[&apos;invoice_line/invoice_id/sale_ids/order_line&apos;]"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_MESSAGES" class="java.lang.Object"/>
+	<parameter name="SUBREPORT_BASES" class="java.lang.Object"/>
+	<parameter name="retencion" class="java.lang.Object"/>
+	<parameter name="SUBREPORT_BANCO" class="java.lang.Object"/>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Lineas_de_factura-invoice_line/id]]></fieldDescription>
+	</field>
+	
+	<field name="Nombre-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Nombre-name]]></fieldDescription>
+	</field>
+	<field name="Ciudad-city" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Ciudad-city]]></fieldDescription>
+	</field>
+	<field name="Calle-street" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Calle-street]]></fieldDescription>
+	</field>
+	<field name="Nombre_provincia-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Provincia-state_id/Nombre_provincia-name]]></fieldDescription>
+	</field>
+	<field name="C.P.-zip" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/C.P.-zip]]></fieldDescription>
+	</field>
+	
+	<field name="NIF-vat" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/NIF-vat]]></fieldDescription>
+	</field>
+	<field name="Fecha_factura-date_invoice" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Fecha_factura-date_invoice]]></fieldDescription>
+	</field>
+	<field name="Factura" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Numero_factura-internal_number]]></fieldDescription>
+	</field>
+	<field name="ID-id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/ID-id]]></fieldDescription>
+	</field>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<field name="Descripcion-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Lineas_de_factura-invoice_line/Descripcion-name]]></fieldDescription>
+	</field>
+	<field name="Importe-price_subtotal" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Lineas_de_factura-invoice_line/Importe-price_subtotal]]></fieldDescription>
+	</field>
+	<field name="Precio_unidad-price_unit" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Lineas_de_factura-invoice_line/Precio_unidad-price_unit]]></fieldDescription>
+	</field>
+	<field name="Cantidad-quantity" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Lineas_de_factura-invoice_line/Cantidad-quantity]]></fieldDescription>
+	</field>
+	<field name="Importe-amount" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Lineas_de_factura-invoice_line/Impuestos-invoice_line_tax_id/Importe-amount]]></fieldDescription>
+	</field>
+	
+	
+	
+	
+	
+	
+	<field name="Impuesto-amount_tax" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Impuesto-amount_tax]]></fieldDescription>
+	</field>
+	<field name="Total-amount_total" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Total-amount_total]]></fieldDescription>
+	</field>
+	<field name="Subtotal-amount_untaxed" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Subtotal-amount_untaxed]]></fieldDescription>
+	</field>
+	
+	<field name="Dto_P.P.-financial_discount_percentage" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Dto_P.P.-financial_discount_percentage]]></fieldDescription>
+	</field>
+	
+	
+	
+	
+	<field name="ModoPago" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Modo_de_pago-payment_mode_id/Nombre-name]]></fieldDescription>
+	</field>
+	<field name="Numero_de_cuenta-acc_number2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Cuenta_de_credito_cliente-credit_bank_account_customer_id/Numero_de_cuenta-acc_number]]></fieldDescription>
+	</field>
+	
+	
+	<field name="Nombre-name2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Modo_de_pago_de_cliente-customer_payment_mode/Nombre-name]]></fieldDescription>
+	</field>
+	
+	
+	<field name="Numero_de_cuenta-acc_number4" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Cuenta_de_credito-bank_id_cta_cargo/Numero_de_cuenta-acc_number]]></fieldDescription>
+	</field>
+	<field name="Nombre_del_banco-bank_name2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Cuenta_de_credito-bank_id_cta_cargo/Nombre_del_banco-bank_name]]></fieldDescription>
+	</field>
+	
+	
+	
+	
+	<field name="Row-loc_row" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/invoice_line/Producto-product_id/Row-loc_row]]></fieldDescription>
+	</field>
+	<field name="Case-loc_case" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/invoice_line/Producto-product_id/Case-loc_case]]></fieldDescription>
+	</field>
+	
+	
+	
+	
+	
+	
+	
+	<field name="Pedido" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/invoice_line/invoice_id/sale_ids/order_line/order_id/name]]></fieldDescription>
+	</field>
+	<field name="FPedido" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/invoice_line/invoice_id/sale_ids/order_line/order_id/date_order]]></fieldDescription>
+	</field>
+	<sortField name="Factura"/>
+	<sortField name="Pedido"/>
+	<sortField name="id"/>
+	<variable name="subtotal" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Importe-price_subtotal} == null ||
+$F{Importe-price_subtotal} == "" ||
+$F{Importe-price_subtotal} == "0,0" ||
+$F{Importe-price_subtotal} == "0.0" ? 0.0 : new Double(String.valueOf($F{Importe-price_subtotal}))]]></variableExpression>
+	</variable>
+	<variable name="bases" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Subtotal-amount_untaxed} == null ||
+$F{Subtotal-amount_untaxed} == "" ||
+$F{Subtotal-amount_untaxed} == "0,0" ||
+$F{Subtotal-amount_untaxed} == "0.0" ? 0.0 : new Double(String.valueOf($F{Subtotal-amount_untaxed}))]]></variableExpression>
+	</variable>
+	<variable name="DTO_PP" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Dto_P.P.-financial_discount_percentage} == null ||
+$F{Dto_P.P.-financial_discount_percentage}  == "" ||
+$F{Dto_P.P.-financial_discount_percentage}  == "0,0" ||
+$F{Dto_P.P.-financial_discount_percentage} == "0.0" ? 0.0 :
+new Double(String.valueOf($F{Dto_P.P.-financial_discount_percentage}))]]></variableExpression>
+	</variable>
+	<variable name="iva" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Importe-amount} == null ||
+$F{Importe-amount} == "" ||
+$F{Importe-amount} == "0.0" ||
+$F{Importe-amount} == "0,0" ||
+$F{Importe-amount} == "0.00" ||
+$F{Importe-amount} == "0,00" ||
+$F{Importe-amount} == "0.000" ||
+$F{Importe-amount} == "0,000" ? 0.0 : new Double(Double.parseDouble($F{Importe-amount}))]]></variableExpression>
+	</variable>
+	<variable name="precio" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Precio_unidad-price_unit} == null ||
+$F{Precio_unidad-price_unit} == "" ||
+$F{Precio_unidad-price_unit} == "0.0" ||
+$F{Precio_unidad-price_unit} == "0,0"
+|| $F{Precio_unidad-price_unit} == "0.00" ||
+$F{Precio_unidad-price_unit} == "0,00" ||
+$F{Precio_unidad-price_unit} == "0.000" ||
+$F{Precio_unidad-price_unit} == "0,000" ?
+0.0 : new Double(Double.parseDouble($F{Precio_unidad-price_unit}))]]></variableExpression>
+	</variable>
+	<variable name="cantidad" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Cantidad-quantity} == null ||
+$F{Cantidad-quantity} == "" ||
+$F{Cantidad-quantity} == "0,0" ||
+$F{Cantidad-quantity} == "0.0" ? 0.0 :
+new Double(String.valueOf($F{Cantidad-quantity}))]]></variableExpression>
+	</variable>
+	<variable name="conIva" class="java.lang.Boolean">
+		<variableExpression><![CDATA[$F{Impuesto-amount_tax} == null ||
+$F{Impuesto-amount_tax} == "" ||
+$F{Impuesto-amount_tax} == "0.0" ||
+$F{Impuesto-amount_tax} == "0,0"
+|| $F{Impuesto-amount_tax} == "0.00" ||
+$F{Impuesto-amount_tax} == "0,00" ||
+$F{Impuesto-amount_tax} == "0.000" ||
+$F{Impuesto-amount_tax} == "0,000" ?
+false : true]]></variableExpression>
+	</variable>
+	<variable name="BaseImpo" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{bases}-$V{bases}*$V{DTO_PP}*0.01]]></variableExpression>
+	</variable>
+	<variable name="cuotaIva" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{BaseImpo}*$V{iva}]]></variableExpression>
+	</variable>
+	<variable name="total" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Total-amount_total} == null ||
+$F{Total-amount_total} == "" ||
+$F{Total-amount_total} == "0.0" ||
+$F{Total-amount_total} == "0,0"
+|| $F{Total-amount_total} == "0.00" ||
+$F{Total-amount_total} == "0,00" ||
+$F{Total-amount_total} == "0.000" ||
+$F{Total-amount_total} == "0,000" ?
+0.0 : new Double(Double.parseDouble($F{Total-amount_total}))]]></variableExpression>
+	</variable>
+	<variable name="indice" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{Descripcion-name}.indexOf( ']' )]]></variableExpression>
+	</variable>
+	<variable name="cajas" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Case-loc_case} == null ||
+$F{Case-loc_case} == "" ||
+$F{Case-loc_case} == "0,0" ||
+$F{Case-loc_case} == "0.0" ||
+$F{Case-loc_case} == "0,00" ||
+$F{Case-loc_case} == "0.00" ||
+$F{Case-loc_case} == "0,000" ||
+$F{Case-loc_case} == "0.000"? 0.0 :
+new Double(String.valueOf($F{Case-loc_case}))]]></variableExpression>
+	</variable>
+	<group name="factura" footerPosition="ForceAtBottom">
+		<groupExpression><![CDATA[$F{Factura}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<textField>
+					<reportElement x="59" y="2" width="143" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["DESCRIPCIÓN"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="21" width="555" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="492" y="1" width="63" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["IMPORTE"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="425" y="1" width="65" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[" PRECIO"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="338" y="1" width="73" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["CANTIDAD"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="182">
+				<rectangle>
+					<reportElement mode="Transparent" x="0" y="2" width="554" height="180"/>
+				</rectangle>
+				<textField>
+					<reportElement mode="Opaque" x="336" y="3" width="75" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["CUOTA IVA"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="149" y="3" width="116" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["BASE IMPONIBLE"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="4" y="3" width="84" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["SUBTOTALES"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="492" y="3" width="62" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["TOTALES"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="264" y="3" width="71" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["% IVA"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="2" y="90" width="106" height="18"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA["  FORMA DE PAGO: "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="2" y="107" width="106" height="18"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA["  BANCO: "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="2" y="125" width="106" height="18"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA["  Nº CUENTA : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="2" y="147" width="106" height="18"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA["  VENCIMIENTOS : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="459" y="96" width="76" height="18"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["TOTAL €"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="19" width="555" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="89" width="555" height="1"/>
+				</line>
+				<line>
+					<reportElement x="87" y="2" width="1" height="87"/>
+				</line>
+				<line>
+					<reportElement x="149" y="2" width="1" height="86"/>
+				</line>
+				<line>
+					<reportElement x="264" y="2" width="1" height="86"/>
+				</line>
+				<line>
+					<reportElement x="334" y="2" width="1" height="86"/>
+				</line>
+				<line>
+					<reportElement x="410" y="2" width="1" height="86"/>
+				</line>
+				<line>
+					<reportElement x="491" y="2" width="1" height="86"/>
+				</line>
+				<line>
+					<reportElement x="247" y="89" width="1" height="54"/>
+				</line>
+				<line>
+					<reportElement x="455" y="89" width="1" height="54"/>
+				</line>
+				<line>
+					<reportElement x="455" y="113" width="99" height="1"/>
+				</line>
+				<textField pattern="###0.00" isBlankWhenNull="true">
+					<reportElement x="2" y="20" width="83" height="20"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{bases}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="494" y="21" width="53" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{total}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="100" y="90" width="123" height="18"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Nombre-name2} != null ||
+$F{Nombre-name2} != "" ||
+$F{Nombre-name2} != " "
+? $F{Nombre-name2} : ""]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement mode="Opaque" x="104" y="147" width="194" height="35"/>
+					<dataSourceExpression><![CDATA[$P{SUBREPORT_MESSAGES}]]></dataSourceExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "FacturaVenta1_vencimientos.jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="459" y="117" width="72" height="22"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{total}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="143" width="555" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="251" y="92" width="201" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ModoPago} == null ? "" : "MODO DE PAGO: " + $F{ModoPago}]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement x="153" y="21" width="255" height="18"/>
+					<dataSourceExpression><![CDATA[$P{SUBREPORT_BASES}]]></dataSourceExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "FacturaVenta_sub.jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" pattern="">
+					<reportElement x="73" y="125" width="178" height="18"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ModoPago}.contains("Transferencia") ?
+$F{Numero_de_cuenta-acc_number4} :
+$F{Numero_de_cuenta-acc_number2}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement mode="Opaque" x="73" y="107" width="175" height="18"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ModoPago}.contains("Transferencia") ?
+$F{Nombre_del_banco-bank_name2} :
+""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="pedido">
+		<groupExpression><![CDATA[$F{Pedido}]]></groupExpression>
+		<groupHeader>
+			<band height="17">
+				<textField>
+					<reportElement x="81" y="0" width="216" height="17"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["ALBARÁN ORIGEN:  "+ $F{Pedido}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="248" y="0" width="147" height="17"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FPedido} == null ||
+$F{FPedido} == "" ? null :
+(new SimpleDateFormat("dd/MM/yyyy").format( new SimpleDateFormat("yyyy-MM-dd").parse($F{FPedido})))]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="id">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
+	</group>
+	<background>
+		<band height="800" splitType="Stretch">
+			<rectangle>
+				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="231" width="554" height="343"/>
+			</rectangle>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="337" y="231" width="1" height="343"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="425" y="231" width="1" height="343"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="491" y="231" width="1" height="343"/>
+			</line>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="231" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="285" y="131" width="270" height="98" forecolor="#333333"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Opaque" x="289" y="133" width="262" height="20" backcolor="#FFFFFF"/>
+				<textElement>
+					<font size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Nombre-name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Transparent" x="289" y="156" width="262" height="20" backcolor="#FFFFFF"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Calle-street}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="289" y="177" width="262" height="20" backcolor="#FFFFFF"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{C.P.-zip}+"     "+$F{Ciudad-city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="6" y="144" width="213" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Factura "]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="96" y="22" width="1" height="18"/>
+			</line>
+			<textField>
+				<reportElement mode="Transparent" x="289" y="195" width="262" height="20" backcolor="#FFFFFF"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Nombre_provincia-name}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Icon">
+				<reportElement x="9" y="3" width="175" height="103"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"logo1.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement mode="Transparent" x="289" y="213" width="262" height="17" backcolor="#FFFFFF"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["CIF: " + $F{NIF-vat}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="109" y="193" width="91" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Fecha_factura-date_invoice} == null ||
+$F{Fecha_factura-date_invoice} == "" ? null :
+(new SimpleDateFormat("dd/MM/yyyy").format( new SimpleDateFormat("yyyy-MM-dd").parse($F{Fecha_factura-date_invoice})))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="193" width="108" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Factura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="173" width="108" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Nº FACTURA"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="108" y="173" width="1" height="20"/>
+			</line>
+			<textField>
+				<reportElement x="109" y="173" width="91" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["FECHA"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="173" width="200" height="20"/>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="102" width="555" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Sdad. Inscrita en el Reg.Mercantil de Toledo, Libro de Sdades, Tomo 1336, Folio 180, B, Hoja T0-24744, Inscrip 1- C.I.F.B45615614."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="151" y="74" width="404" height="17" forecolor="#009900"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Telf. Planta: 645 779 865 - Telf. Admin.: 925 34 02 08 - Fax: 925 34 02 12"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="151" y="47" width="404" height="17" forecolor="#009900"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Ctra. Toledo, km. 29.500  - 45400  MORA (Toledo)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="2" width="418" height="38" forecolor="#009900"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="24" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["HORMIGONES LÁZARO, S . L "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{id_COUNT}==1]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="6" y="0" width="328" height="18"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{indice}>0 ? $F{Descripcion-name}.substring( $V{indice}+2 ) :
+$F{Descripcion-name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000" isBlankWhenNull="true">
+				<reportElement x="338" y="0" width="70" height="18"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0000" isBlankWhenNull="true">
+				<reportElement x="426" y="0" width="64" height="18"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{precio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="492" y="0" width="56" height="18"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{subtotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="406" y="0" width="17" height="18"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Row-loc_row} ? "TN" : ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
