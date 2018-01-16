@@ -173,7 +173,7 @@ class CheckReport(object):
             busca = '$F{%s}' % nombre
             if nombre not in self.SortFieldsNames and self._data.find(busca) < 0:
                 tmp = nombre.split('-')
-                tmp = tmp[1] if len(tmp) == 2 else tmp[0]
+                tmp = tmp[-1] if len(tmp) > 1 else tmp[0]
                 if tmp not in self.countNames:
                     if not prime:
                         print "\tCampos sin uso"
