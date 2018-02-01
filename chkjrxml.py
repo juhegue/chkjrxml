@@ -63,7 +63,7 @@ class CheckReport(object):
                 f.write(self.data)
         except Exception as e:
             print u'Error %s: %s' % (file_name, e)
-
+            sys.exit(1)
 
     @staticmethod
     def print_sin_uso(titulo, nombres):
@@ -238,7 +238,8 @@ class Report(object):
         for jr in jrs:
             CheckReport(jr, self.dir_backup())
 
-    def dir_backup(self):
+    @staticmethod
+    def dir_backup():
         """
         Directorio backup
         :return:  str
