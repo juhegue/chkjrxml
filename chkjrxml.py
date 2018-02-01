@@ -18,203 +18,212 @@ __version__ = '0.0.1'
 
 
 class CheckReport(object):
-    def __init__(self, fileName, dirBackup):
-        self._reportPath = fileName
-        self._pathPrefix = ""
-        self.fields = list()
-        self.fieldNames = list()
-        self.variableNames = list()
-        self.SortFieldsNames = list()
-        self.countNames = list()
-
+    def __init__(self, file_name, dir_backup):
         try:
-            with open(fileName, 'r') as f:
-                self._data = f.read()
+            with open(file_name, 'r') as f:
+                self.data = f.read()
 
+            # graba el backup
             prefijo = datetime.now().strftime('%Y%m%d%H%M%S')
-            nuevo = os.path.join(dirBackup, '%s_%s' % (prefijo, self.name))
+            nuevo = os.path.join(dir_backup, '%s_%s' % (prefijo, os.path.basename(file_name)))
             with open(nuevo, 'w') as f:
-                f.write(self._data)
+                f.write(self.data)
+
+            self.doc = etree.parse(file_name)
 
         except Exception as e:
-            print u'Error %s: %s' % (fileName, e)
+            print u'Error %s: %s' % (file_name, e)
             sys.exit(1)
 
-    def __str__(self):
-        return self._reportPath
+        self.nameespace = 'http://jasperreports.sourceforge.net/jasperreports'
+        self.nameespaces = {'jr': self.nameespace}
+        self.variables_internas = ['PAGE_NUMBER', 'COLUMN_NUMBER', 'REPORT_COUNT', 'PAGE_COUNT', 'COLUMN_COUNT']
 
-    @property
-    def path(self):
-        return self._reportPath
+        self.fields = list()
 
-    @property
-    def name(self):
-        return os.path.basename(self._reportPath)
+        self.non_fields = list()
+        self.propertys = list()
+        self.parameters = list()
+        self.sort_fields = list()
+        self.variables = list()
+        self.groups = list()
 
-    def save(self, fileName):
+        self.extrae()
+        self.purga_fields()
+        self.parametro_sin_definir()
+        self.parametro_sin_uso()
+        self.variable_sin_definir()
+        self.variable_sin_uso()
+        self.field_sin_definir()
+        self.field_sin_uso()
+
+        # graba la modificación
         try:
-            with open(fileName, 'w') as f:
-                f.write(self._data)
+            with open(file_name, 'w') as f:
+                f.write(self.data)
         except Exception as e:
-            print u'Error %s: %s' % (fileName, e)
+            print u'Error %s: %s' % (file_name, e)
 
-    def es_variable_report(self, nom):
-        """
-        Comprueba si es una variable del report como "PAGE_NUMBER"
-        """
-        var = nom.split("_")
-        if len(var) == 2:
-            if var[0] == var[0].upper() and var[1] == var[1].upper():
-                return True
-        return False
 
-    def extractFields(self):
-        doc = etree.parse(self._reportPath)
+    @staticmethod
+    def print_sin_uso(titulo, nombres):
+        print '\t%s:' % titulo
+        for nombre in nombres:
+            print '\t\t%s' % nombre
 
-        # Define namespaces
-        ns = 'http://jasperreports.sourceforge.net/jasperreports'
-        nss = {'jr': ns}
+    def busca_dato(self, letra):
+        dato = dict()
+        fin = 0
+        while True:
+            ini = self.data.find('$%s{' % letra, fin)
+            if ini < 0: break
+            fin = self.data.find('}', ini)
+            if fin < 0: break
+            nom = self.data[ini+3:fin]
+            dato[nom] = nom
+        return dato.values()
 
-        fieldTags = doc.xpath( '/jr:jasperReport/jr:field', namespaces=nss )
-        fields = {}
-        fieldNames = []
-        for tag in fieldTags:
-            name = tag.get('name')
-            type = tag.get('class')
-            children = tag.getchildren()
-            path = tag.findtext('{%s}fieldDescription' % ns, '').strip()
-            # Make the path relative if it isn't already
-            if path.startswith('/data/record/'):
-                path = self._pathPrefix + path[13:]
-            # Remove language specific data from the path so:
-            # Empresa-partner_id/Nom-name becomes partner_id/name
-            # We need to consider the fact that the name in user's language
-            # might not exist, hence the easiest thing to do is split and [-1]
-            newPath = []
-            for x in path.split('/'):
-                newPath.append( x.split('-')[-1] )
-            path = '/'.join( newPath )
-            if path in fields:
-                self.field_duplicados(name, fields[path]['name'])
-                continue
-            fields[ path ] = {
-                'name': name,
-                'type': type,
-            }
-            fieldNames.append( name )
-        self.fields = fields
-        self.fieldNames = fieldNames
+    def parametro_sin_uso(self):
+        sin_uso = list()
+        for nombre in self.parameters:
+            busca = '$P{%s}' % nombre
+            if self.data.find(busca) < 0:
+                sin_uso.append(nombre)
 
-    def extractVariables(self):
-        doc = etree.parse(self._reportPath)
+        self.print_sin_uso('Parámetros sin uso', sin_uso)
 
-        # Define namespaces
-        ns = 'http://jasperreports.sourceforge.net/jasperreports'
-        nss = {'jr': ns}
-
-        fieldTags = doc.xpath( '/jr:jasperReport/jr:variable', namespaces=nss )
-        for tag in fieldTags:
-            name = tag.get('name')
-            self.variableNames.append(name)
-
-    def extractSortFields(self):
-        doc = etree.parse(self._reportPath)
-
-        # Define namespaces
-        ns = 'http://jasperreports.sourceforge.net/jasperreports'
-        nss = {'jr': ns}
-
-        fieldTags = doc.xpath( '/jr:jasperReport/jr:sortField', namespaces=nss )
-        for tag in fieldTags:
-            name = tag.get('name')
-            self.SortFieldsNames.append(name)
+    def parametro_sin_definir(self):
+        for nom in self.busca_dato('P'):
+            if nom not in self.parameters:
+                print u"\tERROR. Parámetro no definido:%s" % nom
 
     def borra_field(self, nombre):
         busca = '<field name="%s"' % nombre
-        ini = self._data.find(busca)
+        ini = self.data.find(busca)
 
         busca = '</field>'
-        fin = self._data.find(busca, ini)
+        fin = self.data.find(busca, ini)
         if ini <= 0 or fin < 0:
             return False
 
         # borra
         fin += len(busca)
-        self._data = self._data[:ini] + self._data[fin:]
+        self.data = self.data[:ini] + self.data[fin:]
         return True
 
-    def field_duplicados(self, nombre, nombre_ok):
-        print '\tPurgando campo duplicado %s por %s:' % (nombre, nombre_ok),
-        if self.borra_field(nombre):
-            # y lo reemplaza
-            self._data = self._data.replace('$F{%s}' % nombre, '$F{%s}' % nombre_ok)
-            print 'Ok'
-        else:
-            print 'No encotrado'
-
-    def field_sin_definir(self):
-        fields = dict()
-        fin = 0
-        while True:
-            ini = self._data.find('$F{', fin)
-            if ini < 0: break
-            fin = self._data.find('}', ini)
-            if fin < 0: break
-            nom = self._data[ini+3:fin]
-            fields[nom] = nom
-
-        for nom in fields.values():
-            if nom not in self.fieldNames:
-                print "\tERROR. Campo no definido:%s" % nom
-
     def field_sin_uso(self):
+        todos = False
         prime = False
-        for nombre in self.fieldNames:
+        for nombre in self.non_fields:
             busca = '$F{%s}' % nombre
-            if nombre not in self.SortFieldsNames and self._data.find(busca) < 0:
+            if nombre not in self.sort_fields and self.data.find(busca) < 0:
                 tmp = nombre.split('-')
                 tmp = tmp[-1] if len(tmp) > 1 else tmp[0]
-                if tmp not in self.countNames:
+                if tmp not in self.groups:
                     if not prime:
-                        print "\tCampos sin uso"
+                        print '\tCampos sin uso'
                         prime = True
-                    sn = raw_input('\t  %s ¿eliminar? S/N:' % nombre)
-                    if sn.lower() == 's':
+
+                    if todos:
+                        snt = 'S'
+                        print '\t  %s ¿eliminar? S/N/T: S' % nombre
+                    else:
+                        try:
+                            snt = raw_input('\t  %s ¿eliminar? S/N/T:' % nombre)
+                        except KeyboardInterrupt:
+                            print
+                            sys.exit()
+
+                        snt = snt.upper()
+
+                    if snt == 'S' or snt == 'T':
                         self.borra_field(nombre)
 
-    def variable_sin_definir(self):
-        variables = dict()
-        fin = 0
-        while True:
-            ini = self._data.find('$V{', fin)
-            if ini < 0: break
-            fin = self._data.find('}', ini)
-            if fin < 0: break
-            nom = self._data[ini+3:fin]
-            variables[nom] = nom
+                    if snt == 'T':
+                        todos = True
 
-        for nom in variables.values():
-            if nom not in self.variableNames and not self.es_variable_report(nom):
-                if nom.endswith('_COUNT'):
-                    if nom[:-6] not in self.fieldNames:
-                        print "\tERROR. Variable no definida:%s" % nom
-                    else:
-                        self.countNames.append(nom[:-6])
-                else:
-                    print "\tERROR. Variable no definida:%s" % nom
+    def field_sin_definir(self):
+        for nom in self.busca_dato('F'):
+            if nom not in self.non_fields:
+                print "\tERROR. Campo no definido:%s" % nom
 
     def variable_sin_uso(self):
-        prime = False
-        for nombre in self.variableNames:
+        sin_uso = list()
+        for nombre in self.variables:
             busca = '$V{%s}' % nombre
-            if self._data.find(busca) < 0:
-                if not prime:
-                    prime = True
-                    print '\tVariables sin uso:'
-                print '\t  %s' % nombre
+            if self.data.find(busca) < 0:
+                sin_uso.append(nombre)
+
+        self.print_sin_uso('Variables sin uso', sin_uso)
+
+    def variable_sin_definir(self):
+        for nom in self.busca_dato('V'):
+            if nom not in self.variables and not self.variables_internas:
+                if nom.endswith('_COUNT'):
+                    nom = nom[:-6]      # quita _COUNT
+                    if nom not in self.groups:
+                        print '\tERROR. Variable no definida:%s' % nom
+                else:
+                    print '\tERROR. Variable no definida:%s' % nom
+
+    def purga_fields(self):
+        def field_duplicados(nombre, nombre_ok):
+            if self.borra_field(nombre):
+                # y lo reemplaza
+                print '\tOk. Purgando campo duplicado %s por %s:' % (nombre, nombre_ok)
+                self.data = self.data.replace('$F{%s}' % nombre, '$F{%s}' % nombre_ok)
+            else:
+                print '\tERROR(No encotrado). Purgando campo duplicado %s por %s:' % (nombre, nombre_ok)
+
+        fields = dict()
+        for field in self.fields:
+            for key, value in field.iteritems():
+                path = list()
+                value = value[13:]      # quita /data/record/
+                for x in value.split('/'):
+                    path.append(x.split('-')[-1])
+                path = '/'.join(path)
+
+                if path in fields:
+                    field_duplicados(key, fields[path])
+                else:
+                    fields[path] = key
+                    self.non_fields.append(key)
+
+    def extrae(self):
+        tags = self.doc.xpath('/jr:jasperReport/jr:property', namespaces=self.nameespaces)
+        for tag in tags:
+            nombre = tag.get('name')
+            self.propertys.append(nombre)
+
+        tags = self.doc.xpath('/jr:jasperReport/jr:parameter', namespaces=self.nameespaces)
+        for tag in tags:
+            nombre = tag.get('name')
+            self.parameters.append(nombre)
+
+        tags = self.doc.xpath('/jr:jasperReport/jr:field', namespaces=self.nameespaces)
+        for tag in tags:
+            nombre = tag.get('name')
+            valor = tag.findtext('{%s}fieldDescription' % self.nameespace, '').strip()
+            self.fields.append({nombre: valor})
+
+        tags = self.doc.xpath('/jr:jasperReport/jr:sortField', namespaces=self.nameespaces)
+        for tag in tags:
+            nombre = tag.get('name')
+            self.sort_fields.append(nombre)
+
+        tags = self.doc.xpath('/jr:jasperReport/jr:variable', namespaces=self.nameespaces)
+        for tag in tags:
+            nombre = tag.get('name')
+            self.variables.append(nombre)
+
+        tags = self.doc.xpath('/jr:jasperReport/jr:group', namespaces=self.nameespaces)
+        for tag in tags:
+            nombre = tag.get('name')
+            self.groups.append(nombre)
 
 
-class Jasper(object):
+class Report(object):
     def __init__(self, file_path):
         jrs = list()
         if os.path.isdir(file_path):
@@ -222,22 +231,14 @@ class Jasper(object):
             for fic in os.listdir(file_path):
                 if fic.lower().endswith('.jrxml'):
                     nom = os.path.join(file_path, fic)
-                    jrs.append(CheckReport(nom, self.dir_reports()))
+                    jrs.append(nom)
         else:
-            jrs.append(CheckReport(file_path, self.dir_reports()))
+            jrs.append(file_path)
 
         for jr in jrs:
-            print jr.name
-            jr.extractFields()
-            jr.extractVariables()
-            jr.extractSortFields()
-            jr.variable_sin_definir()
-            jr.variable_sin_uso()
-            jr.field_sin_definir()
-            jr.field_sin_uso()
-            jr.save(jr.path)
+            CheckReport(jr, self.dir_backup())
 
-    def dir_reports(self):
+    def dir_backup(self):
         """
         Directorio backup
         :return:  str
@@ -252,14 +253,12 @@ class Jasper(object):
         return directorio
 
 
-def main():
+if __name__ == '__main__':
     if not sys.argv[1:]:
         print __doc__
         sys.exit(2)
 
-    Jasper(sys.argv[1])
+    Report(sys.argv[1])
 
 
-if __name__ == '__main__':
-    main()
 
