@@ -67,9 +67,10 @@ class CheckReport(object):
 
     @staticmethod
     def print_sin_uso(titulo, nombres):
-        print '\t%s:' % titulo
-        for nombre in nombres:
-            print '\t\t%s' % nombre
+        if nombres:
+            print '\t%s:' % titulo
+            for nombre in nombres:
+                print '\t\t%s' % nombre
 
     def busca_dato(self, letra):
         dato = dict()
