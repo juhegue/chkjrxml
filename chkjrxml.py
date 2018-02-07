@@ -19,6 +19,7 @@ __version__ = '0.0.1'
 
 class CheckReport(object):
     def __init__(self, file_name, dir_backup):
+        print(os.path.basename(file_name))
         try:
             with open(file_name, 'r') as f:
                 self.data = f.read()
