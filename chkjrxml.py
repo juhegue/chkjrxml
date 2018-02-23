@@ -154,7 +154,9 @@ class CheckReport(object):
         for nombre in self.variables:
             busca = '$V{%s}' % nombre
             if self.data.find(busca) < 0:
-                sin_uso.append(nombre)
+                busca = 'toVariable="%s"' % nombre
+                if self.data.find(busca) < 0:
+                    sin_uso.append(nombre)
 
         self.print_sin_uso('Variables sin uso', sin_uso)
 
