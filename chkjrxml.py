@@ -174,10 +174,11 @@ class CheckReport(object):
         def field_duplicados(nombre, nombre_ok):
             if self.borra_field(nombre):
                 # y lo reemplaza
-                print '\tOk. Purgando campo duplicado %s por %s:' % (nombre, nombre_ok)
+                print '\tOk. Purgando campo duplicado %s por %s' % (nombre, nombre_ok)
+                self.data = self.data.replace('<sortField name="%s"' % nombre, '<sortField name="%s"' % nombre_ok)
                 self.data = self.data.replace('$F{%s}' % nombre, '$F{%s}' % nombre_ok)
             else:
-                print '\tERROR(No encotrado). Purgando campo duplicado %s por %s:' % (nombre, nombre_ok)
+                print '\tERROR(No encotrado). Purgando campo duplicado %s por %s' % (nombre, nombre_ok)
 
         fields = dict()
         for field in self.fields:
